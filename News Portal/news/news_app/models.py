@@ -46,7 +46,10 @@ class Post(models.Model):
         self.save()
 
     def preview(self):
-        return self.text[:125] + '...'
+        return self.text[:21] + '...'
+    
+    def __str__(self):
+        return f'{self.title}: {self.preview()}'
 
 class PostCategory(models.Model):
     post = models.ForeignKey(Post, on_delete = models.CASCADE)

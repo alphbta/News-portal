@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-x0co#1x+#wze=m$q&kxikiwx@t$m36j5$992)lxq^(byh(n#vh'
+SECRET_KEY = 'django-insecure-70mw$x4(9e9#r-9^ujsr1se$i&oi7o3-vmj^^%x9kmm4-fu&1b'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -39,9 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'news_app',
+    'fpages',
     'django.contrib.sites',
     'django.contrib.flatpages',
-    'fpages',
 ]
 
 SITE_ID = 1
@@ -117,7 +117,7 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_TZ = False
+USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
