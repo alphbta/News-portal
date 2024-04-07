@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.urls import reverse
 
 
 class Author(models.Model):
@@ -19,9 +20,15 @@ class Author(models.Model):
             others_comment_rate += e.rating
         self.rating = author_post_rate * 3 + author_comment_rate + others_comment_rate
         self.save()
+
+    def __str__(self):
+        return self.user.username
         
 class Category(models.Model):
     name = models.CharField(max_length = 255, unique = True)
+
+    def __str__(self):
+        return self.name
 
 class Post(models.Model):
     news = 'NE'
@@ -48,6 +55,10 @@ class Post(models.Model):
     def preview(self):
         return self.text[:21] + '...'
     
+    def get_absolute_url(self):
+        return reverse("post_detail", args=[str(self.id)])
+    
+
     def __str__(self):
         return f'{self.title}: {self.preview()}'
 
