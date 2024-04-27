@@ -6,6 +6,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from .filters import PostFilter
 from .forms import PostForm
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 
 class PostsList(ListView):
@@ -23,6 +24,7 @@ class PostsList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['filterset'] = self.filterset
+        context['is_not_author'] = not self.request.user.groups.filter(name='authors').exists()
         return context
 
 class PostsDetail(DetailView):
@@ -30,7 +32,8 @@ class PostsDetail(DetailView):
     template_name = 'post.html'
     context_object_name = 'post'
 
-class NewsCreate(CreateView):
+class NewsCreate(PermissionRequiredMixin, CreateView):
+    permission_required = ('news_app.add_post')
     form_class = PostForm
     model = Post
     template_name = 'news_edit.html'
@@ -40,17 +43,20 @@ class NewsCreate(CreateView):
         post._type = Post.news
         return super().form_valid(form)
 
-class NewsUpdate(UpdateView):
+class NewsUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    permission_required = ('news_app.change_post')
     form_class = PostForm
     model = Post
     template_name = 'news_edit.html'
 
-class NewsDelete(DeleteView):
+class NewsDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = ('news_app.delete_post')
     model = Post
     template_name = 'news_delete.html'
     success_url = reverse_lazy('post_list')
 
-class ArticleCreate(CreateView):
+class ArticleCreate(PermissionRequiredMixin, CreateView):
+    permission_required = ('news_app.add_post')
     form_class = PostForm
     model = Post
     template_name = 'article_edit.html'
@@ -60,15 +66,20 @@ class ArticleCreate(CreateView):
         post._type = Post.article
         return super().form_valid(form)
 
-class ArticleUpdate(UpdateView):
+class ArticleUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    permission_required = ('news_app.change_post')
     form_class = PostForm
     model = Post
     template_name = 'article_edit.html'
 
-class ArticleDelete(DeleteView):
+class ArticleDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = ('news_app.delete_post')
     model = Post
     template_name = 'article_delete.html'
     success_url = reverse_lazy('post_list')
 
 def error_404(request, exception):
     return render(request, '404.html', {}, status=404)
+
+def error_403(request, exception):
+    return render(request, '403.html', {}, status=403)

@@ -13,6 +13,12 @@ News
     <h1>Все новости</h1>
     <h3>{% current_time '%b %d %Y' %}</h3>
     <hr>
+    {% if is_not_author %}
+    <form action="/login/upgrade/">
+        <button>Стать автором</button>
+    </form>
+    <hr>
+    {% endif %}
     <form action="" method='get'>
         {{ filterset.form.as_p }}
         <input type='submit' value='Найти' />

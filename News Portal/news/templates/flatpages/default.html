@@ -8,6 +8,7 @@
         <title>News Portal - {% block title %} {% endblock title %}</title>
 
         {% load static %}
+        {% load custom_tags %}
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
     </head>
@@ -27,8 +28,31 @@
                         <li class="nav-item active">
                             <a class="nav-link" href="/news/">Home</a>
                         </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/news/create/">Создать новость</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/articles/create/">Создать статью</a>
+                        </li>
                     </ul>
                 </div>
+                {% if user.is_authenticated %}
+                <div align="right">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/login/logout/">Выйти</a>
+                        </li>
+                    </ul>
+                </div>
+                {% else %}
+                <div align="right">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/accounts/login/">Войти</a>
+                        </li>
+                    </ul>
+                </div>
+                {% endif %}
             </div>
          </nav>
         <!-- Page content-->

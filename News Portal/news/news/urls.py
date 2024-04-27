@@ -16,18 +16,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from news_app.views import ArticleCreate, ArticleDelete, ArticleUpdate
+from news_app.views import ArticleCreate, ArticleDelete, ArticleUpdate, PostsList
 from django.views.generic import RedirectView
 
 handler404 = 'news_app.views.error_404'
+handler403 = 'news_app.views.error_403'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('pages/', include('django.contrib.flatpages.urls')),
     path('news/', include('news_app.urls')),
+    path('articles/', PostsList.as_view(), name='articles'),
     path('articles/create/', ArticleCreate.as_view(), name='article_create'),
     path('articles/<int:pk>/edit/', ArticleUpdate.as_view(), name='article_update'),
     path('articles/<int:pk>/delete/', ArticleDelete.as_view(), name='article_delete'),
     path('articles/<int:pk>/', RedirectView.as_view(url='/news/%(pk)s/')),
-    path('', RedirectView.as_view(url='news/'))
+    path('', RedirectView.as_view(url='news/')),
+    path('accounts/', include('allauth.urls')),
+    path('login/', include('sign.urls')),
 ]

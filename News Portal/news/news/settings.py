@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-70mw$x4(9e9#r-9^ujsr1se$i&oi7o3-vmj^^%x9kmm4-fu&1b'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -43,7 +43,12 @@ INSTALLED_APPS = [
     'fpages',
     'django.contrib.sites',
     'django.contrib.flatpages',
-    
+    'sign',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.yandex',
+    'allauth.socialaccount.providers.google'
 ]
 
 SITE_ID = 1
@@ -57,6 +62,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'news.urls'
@@ -76,6 +82,31 @@ TEMPLATES = [
         },
     },
 ]
+
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "SCOPE": [
+            "profile",
+            "email"
+        ],
+        "AUTH_PARAMS": {"access_type": "online"}
+    }
+}
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_FORMS = {'signup': 'sign.models.BasicSignupForm'}
 
 WSGI_APPLICATION = 'news.wsgi.application'
 
@@ -125,10 +156,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "static/"
 
 STATICFILES_DIRS = [
-    BASE_DIR / "static"
+    os.path.join(BASE_DIR, 'static')
 ]
 
 # Default primary key field type
